@@ -1,0 +1,51 @@
+local Library = loadstring(game:HttpGet("https://githubusercontent.com"))()
+local Window = Library.CreateLib("Reach Hub", "BloodTheme")
+
+local MainTab = Window:NewTab("Reach")
+local MainSection = MainTab:NewSection("Hitbox")
+
+_G.ReachEnabled = false
+_G.HitboxSize = 15 
+_G.HitboxTransparency = 0.7 
+
+MainSection:NewToggle("Toggle Reach", "Hitbox Expander", function(state)
+    _G.ReachEnabled = state
+end)
+
+MainSection:NewSlider("Hitbox Size", "Distance", 50, 2, function(size)
+    _G.HitboxSize = size
+end)
+
+MainSection:NewSlider("Transparency", "Visibility", 10, 0, function(trans)
+    _G.HitboxTransparency = trans / 10
+end)
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if _G.ReachEnabled then
+            pcall(function()
+                for _, player in pairs(game.Players:GetPlayers()) do
+                    if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local root = player.Character.HumanoidRootPart
+                        root.Size = Vector3.new(_G.HitboxSize, _G.HitboxSize, _G.HitboxSize)
+                        root.Transparency = _G.HitboxTransparency
+                        root.Color = Color3.fromRGB(255, 0, 0) 
+                        root.Material = Enum.Material.Neon
+                        root.CanCollide = false
+                    end
+                end
+            end)
+        else
+            pcall(function()
+                for _, player in pairs(game.Players:GetPlayers()) do
+                    if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local root = player.Character.HumanoidRootPart
+                        root.Size = Vector3.new(2, 2, 1)
+                        root.Transparency = 1
+                        root.CanCollide = false
+                    end
+                end
+            end)
+        end
+    end
+end)
